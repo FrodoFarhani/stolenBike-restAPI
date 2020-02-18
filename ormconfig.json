@@ -6,8 +6,14 @@
 	"password": "root",
 	"database": "stolenBike",
 	"synchronize": true,
+	"migrationsRun": true,
 	"logging": false,
-	"entities": ["src/entity/**/*.ts"],
-	"migrations": ["src/migration/**/*.ts"],
-	"subscribers": ["src/subscriber/**/*.ts"]
+	"entities": ["dist/database/entity/**/*.js"],
+	"migrations": ["dist/database/migration/*.ts"],
+	"subscribers": ["dist/database/subscriber/*.ts"],
+	"cli": {
+		"entitiesDir": "src/database/entity",
+		"migrationsDir": "src/database/migration",
+		"subscribersDir": "src/database/subscriber"
+	}
 }

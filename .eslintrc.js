@@ -21,7 +21,8 @@ module.exports = {
 		"no-useless-constructor": ["off"],
 		"class-methods-use-this": ["off"],
 		"no-console": ["off"],
-		"@typescript-eslint/no-var-requires": ["off"]
+		"@typescript-eslint/no-var-requires": ["off"],
+		"import/no-cycle": ["off"]
 	},
 	settings: {
 		"import/resolver": {

@@ -1,9 +1,11 @@
 {
+  
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
     "moduleResolution": "node",
     "strict": true,
+    "strictPropertyInitialization": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
@@ -13,7 +15,7 @@
     "noUnusedParameters": true,
     "outDir": "dist",
     "rootDir": "src",
-    "sourceMap": true,
+    "sourceMap": false,
     "baseUrl": ".","lib": [
       "esnext",
       "es2016",

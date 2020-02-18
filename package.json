@@ -16,13 +16,16 @@
     "test:jest": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test": "npm run test:jest --"
+    "test": "npm run test:jest --",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js" 
   },
   "dependencies": {
     "@types/express": "^4.17.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "class-transformer": "^0.2.3",
     "pg": "^7.18.1",
+    "pg-query-stream": "^3.0.2",
     "typeorm": "^0.2.22"
   },
   "devDependencies": {
