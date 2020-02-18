@@ -1,12 +1,8 @@
-import { Request, Response } from "express";
-import logger from "../lib/logger";
+import { Response } from "express";
+import logger from "../../lib/logger";
 import HttpException from "../exeptions/HttpException";
 
-const errorMiddleware = (
-	error: HttpException,
-	_request: Request,
-	response: Response
-) => {
+const errorMiddleware = (error: HttpException, response: Response) => {
 	const status = error.status || 500;
 	const message = error.message || "Something went wrong";
 

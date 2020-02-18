@@ -1,8 +1,8 @@
 import bodyParser from "body-parser";
 import express from "express";
 import logger from "./lib/logger";
-import Controller from "./interfaces/controllerInterface";
-import errorMiddleware from "./middlewares/errorMiddleware";
+import Controller from "./api/interfaces/controllerInterface";
+import errorMiddleware from "./api/middlewares/errorMiddleware";
 import { connect } from "./config/typeorm";
 
 class App {

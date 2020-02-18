@@ -1,6 +1,6 @@
 import App from "./app";
 import logger from "./lib/logger";
-import controllers from "./controllers/index";
+import controllers from "./api/controllers/index";
 
 process.on("uncaughtException", error => {
 	logger.error(error.message);
