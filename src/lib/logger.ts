@@ -4,6 +4,10 @@ import { IObject } from "../types/object";
 
 class Logger {
 	public info(message: string, obj?: IObject) {
+		this.log("\x1b[37m", "INFO", message, obj);
+	}
+
+	public success(message: string, obj?: IObject) {
 		this.log("\x1b[32m", "INFO", message, obj);
 	}
 
@@ -21,7 +25,7 @@ class Logger {
 
 	private log(style: string, logType: string, message: string, obj?: IObject) {
 		const datetime = new Date();
-		let errObj = "";
+		let errObj: string;
 		obj ? (errObj = JSON.stringify(obj)) : (errObj = "");
 		console.log(
 			style,

@@ -1,0 +1,49 @@
+import bodyParser from "body-parser";
+import express from "express";
+import logger from "./lib/logger";
+import Controller from "./interfaces/controllerInterface";
+import errorMiddleware from "./middlewares/errorMiddleware";
+import { connect } from "./config/typeorm";
+
+class App {
+	public app: express.Application;
+
+	constructor(controllers: Controller[]) {
+		this.app = express();
+
+		this.initializeMiddlewares();
+		this.initializeControllers(controllers);
+		this.initializeErrorHandling();
+		this.initializeDatabase();
+	}
+
+	public listen() {
+		this.app.listen(process.env.PORT, () => {
+			logger.info(`App listening on the port ${process.env.PORT}`);
+		});
+	}
+
+	private initializeMiddlewares() {
+		this.app.use(bodyParser.json());
+	}
+
+	private initializeErrorHandling() {
+		this.app.use(errorMiddleware);
+	}
+
+	private initializeControllers(controllers: Controller[]) {
+		controllers.forEach(controller => {
+			this.app.use("/", controller.router);
+		});
+	}
+
+	private async initializeDatabase() {
+		try {
+			await connect();
+		} catch (error) {
+			logger.error("Database connection failed !");
+		}
+	}
+}
+
+export default App;

@@ -5,7 +5,7 @@ export const connect = async () => {
 	try {
 		const connectionOptions = await getConnectionOptions();
 		const connection = await createConnection(connectionOptions);
-		logger.info("connection started");
+		logger.info("Database connection started");
 		return connection;
 	} catch (e) {
 		logger.error(e);
