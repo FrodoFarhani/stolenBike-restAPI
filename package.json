@@ -1,0 +1,67 @@
+{
+  "name": "stolenbikerestapi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/so0oshiance/stolenBike-restAPI.git",
+  "author": "so0oshiance <mohamad.farhany@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "initdb": "tsc && node dist/factory/index.js",
+    "build": "lint tsc copy-assets",
+    "start": "tsc && node dist/index.js",
+    "lint": "eslint . --cache --fix --ext .ts,.tsx",
+    "pretest": "npm run lint && tsc --noEmit",
+    "format": "prettier --loglevel warn --write \"**/*.{js,css,md}\"",
+    "posttest": "npm run format",
+    "test:jest": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test": "npm run test:jest --"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/jest": "^25.1.2",
+    "@types/node": "^13.7.1",
+    "@types/pg": "^7.14.1",
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-typescript-prettier": "^1.4.2",
+    "husky": "^4.2.3",
+    "jest": "^25.1.0",
+    "lint-staged": "^10.0.7",
+    "prettier": "^1.19.1",
+    "ts-jest": "^25.2.0",
+    "typescript": "^3.7.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --cache --fix",
+      "prettier --loglevel warn --write \"**/*.{ts,js,css,md}\""
+    ],
+    "*.{js,css,md}": "prettier --write"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/lib/"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ]
+  }
+}
