@@ -10,11 +10,13 @@ export const connect = async () => {
 	} catch (e) {
 		logger.error(e);
 		process.exit(1);
+		return undefined;
 	}
 };
 
 export const disconnect = (): Promise<void> => {
 	const conn = getConnection();
+	logger.warn("DB Disconnected!");
 	return conn.close();
 };
 
