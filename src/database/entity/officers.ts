@@ -5,12 +5,12 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 	Column,
-	OneToOne
-	// OneToMany
+	OneToOne,
+	OneToMany
 } from "typeorm";
 
 import StolenCases from "./stolenCases";
-// import StolenCasesHistory from "./stolenCasesHistory";
+import StolenCasesHistory from "./stolenCasesHistory";
 
 @Entity({ name: "officers" })
 export default class Officers {
@@ -37,11 +37,11 @@ export default class Officers {
 		() => StolenCases,
 		(stolenCases: StolenCases) => stolenCases.officer
 	)
-	public stolenCases: StolenCases;
+	public stolenCase: StolenCases;
 
-	// @OneToMany(
-	// 	() => StolenCasesHistory,
-	// 	(stolenCasesHistory: StolenCasesHistory) => stolenCasesHistory.officers
-	// )
-	// public officers: Officers[];
+	@OneToMany(
+		() => StolenCasesHistory,
+		(stolenCasesHistory: StolenCasesHistory) => stolenCasesHistory.officers
+	)
+	public stolenCasesHistorys: StolenCasesHistory[];
 }

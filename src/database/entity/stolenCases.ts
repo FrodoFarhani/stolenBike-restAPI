@@ -7,12 +7,12 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 	Column,
-	JoinColumn
-	// OneToMany
+	JoinColumn,
+	OneToMany
 } from "typeorm";
 
 import Officers from "./officers";
-// import StolenCasesHistory from "./stolenCasesHistory";
+import StolenCasesHistory from "./stolenCasesHistory";
 import Status from "../../enums/statusEnum";
 
 @Entity({ name: "stolenCases" })
@@ -57,14 +57,14 @@ export default class StolenCases {
 
 	@OneToOne(
 		() => Officers,
-		(officers: Officers) => officers.stolenCases
+		(officers: Officers) => officers.stolenCase
 	)
 	@JoinColumn({ name: "officerId" })
 	public officer: Officers;
 
-	// @OneToMany(
-	// 	() => StolenCasesHistory,
-	// 	(stolenCasesHistory: StolenCasesHistory) => stolenCasesHistory.stolenCases
-	// )
-	// public stolenCasesHistorys: StolenCasesHistory[];
+	@OneToMany(
+		() => StolenCasesHistory,
+		(stolenCasesHistory: StolenCasesHistory) => stolenCasesHistory.stolenCases
+	)
+	public stolenCasesHistorys: StolenCasesHistory[];
 }
