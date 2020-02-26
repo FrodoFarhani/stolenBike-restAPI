@@ -6,9 +6,11 @@ import {
 	UpdateDateColumn,
 	Column,
 	OneToOne
+	// OneToMany
 } from "typeorm";
 
 import StolenCases from "./stolenCases";
+// import StolenCasesHistory from "./stolenCasesHistory";
 
 @Entity({ name: "officers" })
 export default class Officers {
@@ -21,13 +23,25 @@ export default class Officers {
 	@UpdateDateColumn()
 	public updatedAt: Date;
 
+	@Column({ nullable: true })
+	public deletedAt: Date;
+
+	@Column({ type: "boolean", nullable: false, default: true })
+	public isAvailable: boolean;
+
 	@Index()
-	@Column({ type: "varchar", nullable: true })
-	public name: string;
+	@Column({ type: "int", nullable: false })
+	public staffCode: number;
 
 	@OneToOne(
 		() => StolenCases,
-		(stolenCases: StolenCases) => stolenCases.officers
+		(stolenCases: StolenCases) => stolenCases.officer
 	)
-	public StolenCases: StolenCases;
+	public stolenCases: StolenCases;
+
+	// @OneToMany(
+	// 	() => StolenCasesHistory,
+	// 	(stolenCasesHistory: StolenCasesHistory) => stolenCasesHistory.officers
+	// )
+	// public officers: Officers[];
 }

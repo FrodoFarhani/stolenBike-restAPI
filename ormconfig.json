@@ -8,11 +8,11 @@
 	"synchronize": true,
 	"migrationsRun": true,
 	"logging": false,
-	"entities": ["dist/database/entity/**/*.js"],
-	"migrations": ["dist/database/migration/*.ts"],
-	"subscribers": ["dist/database/subscriber/*.ts"],
+	"entities": ["dist/database/entity/**/*.js","dist/database/views/**/*.js"],
+	"migrations": ["dist/database/migration/*.js"],
+	"subscribers": ["dist/database/subscriber/*.js"],
 	"cli": {
-		"entitiesDir": "src/database/entity",
+		"entitiesDir": ["src/database/entity","src/database/views"],
 		"migrationsDir": "src/database/migration",
 		"subscribersDir": "src/database/subscriber"
 	}

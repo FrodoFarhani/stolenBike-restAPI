@@ -8,9 +8,12 @@ import {
 	UpdateDateColumn,
 	Column,
 	JoinColumn
+	// OneToMany
 } from "typeorm";
 
 import Officers from "./officers";
+// import StolenCasesHistory from "./stolenCasesHistory";
+import Status from "../../enums/statusEnum";
 
 @Entity({ name: "stolenCases" })
 export default class StolenCases {
@@ -27,31 +30,41 @@ export default class StolenCases {
 	public stolenDate: Date;
 
 	@Index()
-	@Column({ type: "int" })
+	@Column({ type: "int", nullable: false })
 	public licenseNumber: string;
 
-	@Column({ type: "varchar" })
+	@Column({ type: "varchar", nullable: false })
 	public color: string;
 
-	@Column({ type: "varchar" })
+	@Column({ type: "varchar", nullable: false })
 	public type: string;
 
-	@Column({ type: "varchar" })
+	@Column({ type: "varchar", nullable: false })
 	public OwnerName: string;
 
 	@Column({ type: "text", nullable: true })
 	public description?: string;
 
-	@Index()
+	@Column({
+		type: "enum",
+		enum: Status,
+		default: Status.ASSESMENT
+	})
+	Status: Status;
+
 	@Column({ type: "int", nullable: true })
 	public officerId?: number;
 
-	@JoinColumn({ name: "officerId" })
-	public officers: Officers;
-
 	@OneToOne(
 		() => Officers,
-		(officers: Officers) => officers.id
+		(officers: Officers) => officers.stolenCases
 	)
+	@JoinColumn({ name: "officerId" })
 	public officer: Officers;
+
+	// @OneToMany(
+	// 	() => StolenCasesHistory,
+	// 	(stolenCasesHistory: StolenCasesHistory) => stolenCasesHistory.stolenCases
+	// )
+	// public stolenCasesHistorys: StolenCasesHistory[];
 }
