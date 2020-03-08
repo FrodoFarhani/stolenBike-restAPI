@@ -8,8 +8,12 @@ import {
 	UpdateDateColumn,
 	Column,
 	JoinColumn,
-	OneToMany
+	OneToMany,
+	Transaction,
+	TransactionRepository,
+	Repository
 } from "typeorm";
+import { IsString, IsDate, IsNumber } from "class-validator";
 
 import Officers from "./officers";
 import StolenCasesHistory from "./stolenCasesHistory";
@@ -26,33 +30,41 @@ export default class StolenCases {
 	@UpdateDateColumn()
 	public updatedAt: Date;
 
-	@Column({ type: "timestamp" })
+	@Column({ type: "timestamp", nullable: false })
+	@IsDate()
 	public stolenDate: Date;
 
 	@Index()
+	@IsNumber()
 	@Column({ type: "int", nullable: false })
-	public licenseNumber: string;
+	public licenseNumber: number;
 
 	@Column({ type: "varchar", nullable: false })
+	@IsString()
 	public color: string;
 
 	@Column({ type: "varchar", nullable: false })
+	@IsString()
 	public type: string;
 
 	@Column({ type: "varchar", nullable: false })
+	@IsString()
 	public OwnerName: string;
 
 	@Column({ type: "text", nullable: true })
+	@IsString()
 	public description?: string;
 
 	@Column({
 		type: "enum",
 		enum: Status,
-		default: Status.ASSESMENT
+		default: Status.ASSESMENT,
+		nullable: false
 	})
 	Status: Status;
 
-	@Column({ type: "int", nullable: true })
+	@Column({ type: "int", nullable: false, default: 0 })
+	@IsString()
 	public officerId?: number;
 
 	@OneToOne(
@@ -67,4 +79,28 @@ export default class StolenCases {
 		(stolenCasesHistory: StolenCasesHistory) => stolenCasesHistory.stolenCases
 	)
 	public stolenCasesHistorys: StolenCasesHistory[];
+
+	@Transaction({ isolation: "SERIALIZABLE" })
+	save(
+		stolenCase: StolenCases,
+		@TransactionRepository(StolenCases)
+		stolenCasesRepository?: Repository<StolenCases>
+	) {
+		if (stolenCasesRepository === undefined) {
+			return;
+		}
+		return stolenCasesRepository.save(stolenCase);
+	}
+
+	@Transaction({ isolation: "SERIALIZABLE" })
+	update(
+		stolenCase: StolenCases,
+		@TransactionRepository(StolenCases)
+		stolenCasesRepository?: Repository<StolenCases>
+	) {
+		if (stolenCasesRepository === undefined) {
+			return;
+		}
+		return stolenCasesRepository.save(stolenCase);
+	}
 }
