@@ -3,6 +3,7 @@ import { EntityRepository, getManager, getCustomRepository } from "typeorm";
 import StolenCases from "../entity/stolenCases";
 import { BaseRepository } from "./BaseRepository";
 import Officers from "../entity/officers";
+import ViwOfficersVstolenCases from "../views/viw_officersVstolenCases";
 import Status from "../../enums/statusEnum";
 import OfficerRepository from "./officersRepository";
 
@@ -109,6 +110,13 @@ export default class StolenCaseRepository extends BaseRepository<StolenCases> {
 
 			return stolenCase;
 		}
+	}
+
+	async queryCases(stolenCase: StolenCases) {
+		const stolenCaseObj = await getManager().findOne(ViwOfficersVstolenCases,{
+			where: { stolenCase }
+		});
+		return stolenCaseObj;
 	}
 
 	private async findOfficer(id: number) {

@@ -7,13 +7,10 @@ import { getCustomRepository } from "typeorm";
 import Controller from "../interfaces/controllerInterface";
 import validationMiddleware from "../middlewares/validationMiddleware";
 import OfficersRepository from "../../database/repository/officersRepository";
-import StolenCaseRepository from "../../database/repository/StolenCasesRepository";
 import NotImplementedException from "../exeptions/NotImplementedException";
 import logger from "../../lib/logger";
 import Officers from "../../database/entity/officers";
 import MissingParametersException from "../exeptions/MissingParametersException";
-import StolenCases from "../../database/entity/stolenCases";
-import Status from "../../enums/statusEnum";
 
 export default class OfficersController implements Controller {
 	public path = "/officers";

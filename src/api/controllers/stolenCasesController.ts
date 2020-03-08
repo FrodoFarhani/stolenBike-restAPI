@@ -24,7 +24,7 @@ export default class stolenCasesController implements Controller {
 	}
 
 	private initializeRoutes(): void {
-		 this.router.get(`${this.path}:id`, this.findOne);
+		 this.router.get(`${this.path}/findCase`, this.findOne);
 		 this.router.get(`${this.path}`, this.findList);
 		this.router.post(
 			this.path,
@@ -127,9 +127,9 @@ export default class stolenCasesController implements Controller {
 		
 		
 		try {
-			const id = request.body.id;
+			const serchObj: StolenCases = request.body;
 
-			if (!id) {
+			if (!serchObj) {
 				const message = "Required parameters missing";
 				logger.info(message);
 				response.status(404).send(new MissingParametersException(message));
@@ -137,9 +137,9 @@ export default class stolenCasesController implements Controller {
 
 
 			const entityManager =getCustomRepository(StolenCaseRepository);
-			const data: any = await entityManager.findOneStolenCase(id);
+			const data: any = await entityManager.queryCases(serchObj);
 
-			logger.info("Called URL findOne StolenCases:", { id });
+			logger.info("Called URL findOne StolenCases:", { data });
 			response.status(200).send(data);
 		} catch (error) {
 			logger.error(error);
