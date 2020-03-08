@@ -8,7 +8,6 @@ import {
 	UpdateDateColumn,
 	Column,
 	JoinColumn,
-	OneToMany,
 	Transaction,
 	TransactionRepository,
 	Repository
@@ -16,7 +15,6 @@ import {
 import { IsString, IsDate, IsNumber } from "class-validator";
 
 import Officers from "./officers";
-import StolenCasesHistory from "./stolenCasesHistory";
 import Status from "../../enums/statusEnum";
 
 @Entity({ name: "stolenCases" })
@@ -65,20 +63,11 @@ export default class StolenCases {
 
 	@Column({ type: "int", nullable: false, default: 0 })
 	@IsString()
-	public officerId?: number;
+	public officerId: number;
 
-	@OneToOne(
-		() => Officers,
-		(officers: Officers) => officers.stolenCase
-	)
+	@OneToOne(() => Officers)
 	@JoinColumn({ name: "officerId" })
 	public officer: Officers;
-
-	@OneToMany(
-		() => StolenCasesHistory,
-		(stolenCasesHistory: StolenCasesHistory) => stolenCasesHistory.stolenCases
-	)
-	public stolenCasesHistorys: StolenCasesHistory[];
 
 	@Transaction({ isolation: "SERIALIZABLE" })
 	save(

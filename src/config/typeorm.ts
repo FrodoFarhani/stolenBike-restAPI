@@ -4,11 +4,12 @@ import logger from "../lib/logger";
 export const connect = async () => {
 	try {
 		const connectionOptions = await getConnectionOptions();
+
 		const connection = await createConnection(connectionOptions);
-		logger.info("Database connection started", connectionOptions);
+		logger.info("Database connection started");
 		return connection;
 	} catch (e) {
-		logger.error(e);
+		logger.error(`${e}`);
 		process.exit(1);
 		return undefined;
 	}

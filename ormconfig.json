@@ -1,4 +1,5 @@
 {
+	"name": "default",
 	"type": "postgres",
 	"host": "localhost",
 	"port": 5432,
@@ -6,7 +7,7 @@
 	"password": "root",
 	"database": "stolenBike",
 	"synchronize": true,
-	"migrationsRun": false,
+	"migrationsRun": true,
 	"logging": false,
 	"entities": ["dist/database/entity/**/*.js","dist/database/views/**/*.js"],
 	"migrations": ["dist/database/migration/*.js"],

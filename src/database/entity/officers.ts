@@ -5,16 +5,11 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 	Column,
-	OneToOne,
-	OneToMany,
 	Transaction,
 	TransactionRepository,
 	Repository
 } from "typeorm";
 import { IsDate, IsNumber } from "class-validator";
-
-import StolenCases from "./stolenCases";
-import StolenCasesHistory from "./stolenCasesHistory";
 
 @Entity({ name: "officers" })
 export default class Officers {
@@ -38,18 +33,6 @@ export default class Officers {
 	@IsNumber()
 	@Column({ type: "int", nullable: false })
 	public staffCode: number;
-
-	@OneToOne(
-		() => StolenCases,
-		(stolenCases: StolenCases) => stolenCases.officer
-	)
-	public stolenCase: StolenCases;
-
-	@OneToMany(
-		() => StolenCasesHistory,
-		(stolenCasesHistory: StolenCasesHistory) => stolenCasesHistory.officers
-	)
-	public stolenCasesHistorys: StolenCasesHistory[];
 
 	@Transaction({ isolation: "SERIALIZABLE" })
 	save(

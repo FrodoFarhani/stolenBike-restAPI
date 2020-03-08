@@ -1,4 +1,7 @@
-import { Router, Request, Response, NextFunction } from "express";
+import {
+	Router,
+	Request, Response, NextFunction
+} from "express";
 import { getCustomRepository } from "typeorm";
 
 import Controller from "../interfaces/controllerInterface";
@@ -16,12 +19,8 @@ export default class OfficersController implements Controller {
 	public path = "/officers";
 
 	public router: Router = Router();
-
-	private entityManager: any = null;
-
 	constructor() {
 		this.initializeRoutes();
-		this.entityManager = getCustomRepository(OfficersRepository);
 	}
 
 	private initializeRoutes(): void {
@@ -32,8 +31,8 @@ export default class OfficersController implements Controller {
 			validationMiddleware(Officers),
 			this.newOfficer
 		);
-		this.router.delete(this.path, this.deleteOfficer);
-		this.router.all(`${this.path}/*`, this.error);
+		this.router.delete(`${this.path}:id`, this.deleteOfficer);
+		this.router.all(`${this.path}:id/*`, this.error);
 	}
 
 	private error = async (
@@ -41,6 +40,7 @@ export default class OfficersController implements Controller {
 		response: Response
 	): Promise<void> => {
 		const error = new NotImplementedException();
+		logger.error("Bad Request:", error);
 		response.status(error.status).send({
 			message: error.message
 		});
@@ -54,23 +54,11 @@ export default class OfficersController implements Controller {
 		const newRecord: Officers = request.body.officer;
 
 		try {
-			const data: any = await this.entityManager.createAndSave(newRecord);
+			const entityManager = getCustomRepository(OfficersRepository);
+			const data: any = await entityManager.createAndSave(newRecord);
 
-			const stolenCaseEntityManager = getCustomRepository(StolenCaseRepository);
-			const stolenCaseWithoutOfficer:
-				| StolenCases
-				| undefined = await stolenCaseEntityManager.findStolenCaseWithoutOfficer();
-			if (stolenCaseWithoutOfficer) {
-				stolenCaseWithoutOfficer.officerId = data.id;
-				stolenCaseWithoutOfficer.Status = Status.PROCESSING;
-				await stolenCaseEntityManager.updateStolenCase(
-					stolenCaseWithoutOfficer.id,
-					stolenCaseWithoutOfficer
-				);
-			}
-
-			logger.info("New stolenCase added successfully", newRecord);
-			response.send({ data });
+			logger.info("New officer added successfully", data);
+			response.send(data);
 		} catch (error) {
 			logger.error(`Adding new officer error:${error}`);
 			next(error);
@@ -81,7 +69,7 @@ export default class OfficersController implements Controller {
 		request: Request,
 		response: Response
 	): Promise<void> => {
-		const { id } = request.params;
+		const  id = request.body.id;
 
 		if (!id) {
 			const message = "Required parameters missing";
@@ -90,12 +78,13 @@ export default class OfficersController implements Controller {
 		}
 
 		try {
-			const data: any = await this.entityManager.findStolenCases(id);
+			const entityManager = getCustomRepository(OfficersRepository);
+			const data: any = await entityManager.findOneOfficer(id);
 
-			logger.info("Called URL findOne StolenCases:", { id });
+			logger.info("Called URL findOne Officer:", { id });
 			response.status(200).send(data);
 		} catch (error) {
-			logger.info(error);
+			logger.error(error);
 			response.status(error.status).send({
 				message: error.message
 			});
@@ -107,12 +96,13 @@ export default class OfficersController implements Controller {
 		response: Response
 	): Promise<void> => {
 		try {
-			const data: any = await this.entityManager.allOfficers();
+			const entityManager = getCustomRepository(OfficersRepository);
+			const data: any = await entityManager.allOfficers();
 
 			logger.info("Called URL findList in Officers");
 			response.status(200).send(data);
 		} catch (error) {
-			logger.info(error);
+			logger.error(error);
 			response.status(error.status).send({
 				message: error.message
 			});
@@ -123,7 +113,7 @@ export default class OfficersController implements Controller {
 		request: Request,
 		response: Response
 	): Promise<void> => {
-		const { id } = request.params;
+		const { id } = request.body.id;
 
 		if (!id) {
 			const message = "Required parameters missing";
@@ -132,20 +122,8 @@ export default class OfficersController implements Controller {
 		}
 
 		try {
-			const data: any = await this.entityManager.deleteOfficers(id);
-
-			const stolenCaseEntityManager = getCustomRepository(StolenCaseRepository);
-			const stolenCaseWithoutOfficer:
-				| StolenCases
-				| undefined = await stolenCaseEntityManager.findStolenCaseWithoutOfficer();
-			if (stolenCaseWithoutOfficer) {
-				stolenCaseWithoutOfficer.officerId = 0;
-				stolenCaseWithoutOfficer.Status = Status.ASSESMENT;
-				await stolenCaseEntityManager.updateStolenCase(
-					stolenCaseWithoutOfficer.id,
-					stolenCaseWithoutOfficer
-				);
-			}
+			const entityManager = getCustomRepository(OfficersRepository);
+			const data: any = await entityManager.deleteOfficers(id);
 
 			logger.info("Called URL delete Officer:", { id });
 			response.status(200).send(data);

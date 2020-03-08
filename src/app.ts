@@ -11,10 +11,10 @@ class App {
 	constructor(controllers: Controller[]) {
 		this.app = express();
 
+		this.initializeDatabase();
 		this.initializeMiddlewares();
 		this.initializeControllers(controllers);
 		this.initializeErrorHandling();
-		this.initializeDatabase();
 	}
 
 	public listen() {
