@@ -31,21 +31,21 @@ export default class StolenCases {
 	@Column({ type: "int", nullable: false, default: 123 })
 	public licenseNumber: number;
 
-	@Column({ type: "varchar", nullable: false })
+	@Column({ type: "varchar", nullable: true, default: "" })
 	@IsString()
 	public color: string;
 
-	@Column({ type: "varchar", nullable: false })
+	@Column({ type: "varchar", nullable: true, default: "" })
 	@IsString()
 	public type: string;
 
-	@Column({ type: "varchar", nullable: false })
+	@Column({ type: "varchar", nullable: true, default: "" })
 	@IsString()
 	public OwnerName: string;
 
 	@Column({ type: "text", nullable: true })
 	@IsString()
-	public description?: string;
+	public description: string;
 
 	@Column({
 		type: "enum",

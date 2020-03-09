@@ -6,9 +6,9 @@ import { clean } from "./support/cleanDb";
 export default () => {
 	beforeAll(async () => {
 		await connect();
-		await clean();
+		//await clean();
 	});
 
 	afterAll(disconnect);
-	afterEach(clean);
+	//afterEach(clean);
 };
