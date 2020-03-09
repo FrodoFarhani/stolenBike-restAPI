@@ -22,7 +22,10 @@ module.exports = {
 		"class-methods-use-this": ["off"],
 		"no-console": ["off"],
 		"@typescript-eslint/no-var-requires": ["off"],
-		"import/no-cycle": ["off"]
+		"import/no-cycle": ["off"],
+		"import/no-unresolved": ["off"],
+		"no-param-reassign": ["error", { props: false }],
+		"@typescript-eslint/no-explicit-any": ["off"]
 	},
 	settings: {
 		"import/resolver": {

@@ -3,18 +3,12 @@ import {
 	CreateDateColumn,
 	Entity,
 	Index,
-	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
-	Column,
-	JoinColumn,
-	Transaction,
-	TransactionRepository,
-	Repository
+	Column
 } from "typeorm";
-import { IsString, IsDate, IsNumber } from "class-validator";
 
-import Officers from "./officers";
+import { IsString, IsDate, IsNumber } from "class-validator";
 import Status from "../../enums/statusEnum";
 
 @Entity({ name: "stolenCases" })
@@ -34,7 +28,7 @@ export default class StolenCases {
 
 	@Index()
 	@IsNumber()
-	@Column({ type: "int", nullable: false })
+	@Column({ type: "int", nullable: false, default: 123 })
 	public licenseNumber: number;
 
 	@Column({ type: "varchar", nullable: false })
@@ -62,34 +56,6 @@ export default class StolenCases {
 	Status: Status;
 
 	@Column({ type: "int", nullable: false, default: 0 })
-	@IsString()
+	@IsNumber()
 	public officerId: number;
-
-	@OneToOne(() => Officers)
-	@JoinColumn({ name: "officerId" })
-	public officer: Officers;
-
-	@Transaction({ isolation: "SERIALIZABLE" })
-	save(
-		stolenCase: StolenCases,
-		@TransactionRepository(StolenCases)
-		stolenCasesRepository?: Repository<StolenCases>
-	) {
-		if (stolenCasesRepository === undefined) {
-			return;
-		}
-		return stolenCasesRepository.save(stolenCase);
-	}
-
-	@Transaction({ isolation: "SERIALIZABLE" })
-	update(
-		stolenCase: StolenCases,
-		@TransactionRepository(StolenCases)
-		stolenCasesRepository?: Repository<StolenCases>
-	) {
-		if (stolenCasesRepository === undefined) {
-			return;
-		}
-		return stolenCasesRepository.save(stolenCase);
-	}
 }

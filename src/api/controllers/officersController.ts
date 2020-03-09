@@ -1,7 +1,4 @@
-import {
-	Router,
-	Request, Response, NextFunction
-} from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { getCustomRepository } from "typeorm";
 
 import Controller from "../interfaces/controllerInterface";
@@ -16,6 +13,7 @@ export default class OfficersController implements Controller {
 	public path = "/officers";
 
 	public router: Router = Router();
+
 	constructor() {
 		this.initializeRoutes();
 	}
@@ -66,7 +64,7 @@ export default class OfficersController implements Controller {
 		request: Request,
 		response: Response
 	): Promise<void> => {
-		const  id = request.body.id;
+		const { id } = request.body;
 
 		if (!id) {
 			const message = "Required parameters missing";

@@ -1,8 +1,5 @@
-import {
-	Router,
-	Request, Response,NextFunction
-} from "express";
-import {  getCustomRepository } from "typeorm";
+import { Router, Request, Response, NextFunction } from "express";
+import { getCustomRepository } from "typeorm";
 
 import Controller from "../interfaces/controllerInterface";
 import NotImplementedException from "../exeptions/NotImplementedException";
@@ -13,19 +10,18 @@ import StolenCaseRepository from "../../database/repository/StolenCasesRepositor
 import MissingParametersException from "../exeptions/MissingParametersException";
 import RecordNotFoundException from "../exeptions/RecordNotFoundException";
 
-export default class stolenCasesController implements Controller {
+export default class StolenCasesController implements Controller {
 	public path = "/cases/";
 
 	public router: Router = Router();
 
 	constructor() {
 		this.initializeRoutes();
-		
 	}
 
 	private initializeRoutes(): void {
-		 this.router.get(`${this.path}/findCase`, this.findOne);
-		 this.router.get(`${this.path}`, this.findList);
+		this.router.get(`${this.path}/findCase`, this.findOne);
+		this.router.get(`${this.path}`, this.findList);
 		this.router.post(
 			this.path,
 			validationMiddleware(StolenCases),
@@ -85,7 +81,6 @@ export default class stolenCasesController implements Controller {
 				logger.info("StolenCase resolved successfully", data);
 				response.send(data);
 			}
-
 		} catch (error) {
 			logger.error(`Resolving  stolenCase Failed:${error}`);
 			next(error);
@@ -101,8 +96,11 @@ export default class stolenCasesController implements Controller {
 
 		try {
 			const entityManager = getCustomRepository(StolenCaseRepository);
-		
-			const data = await entityManager.updateStolenCase(newRecord.id, newRecord);
+
+			const data = await entityManager.updateStolenCase(
+				newRecord.id,
+				newRecord
+			);
 			if (!data) {
 				const message = "Record not found";
 				logger.info(message);
@@ -111,21 +109,16 @@ export default class stolenCasesController implements Controller {
 				logger.info("StolenCase has updated successfully", data);
 				response.send(data);
 			}
-
-
 		} catch (error) {
 			logger.error(`updating new stolenCase Failed:${error}`);
 			next(error);
 		}
 	};
 
-	
 	private findOne = async (
 		request: Request,
 		response: Response
 	): Promise<void> => {
-		
-		
 		try {
 			const serchObj: StolenCases = request.body;
 
@@ -135,8 +128,7 @@ export default class stolenCasesController implements Controller {
 				response.status(404).send(new MissingParametersException(message));
 			}
 
-
-			const entityManager =getCustomRepository(StolenCaseRepository);
+			const entityManager = getCustomRepository(StolenCaseRepository);
 			const data: any = await entityManager.queryCases(serchObj);
 
 			logger.info("Called URL findOne StolenCases:", { data });
@@ -171,9 +163,8 @@ export default class stolenCasesController implements Controller {
 		request: Request,
 		response: Response
 	): Promise<void> => {
-		
 		try {
-			const id = request.body.id;
+			const { id } = request.body;
 
 			if (!id) {
 				const message = "Required parameters missing";

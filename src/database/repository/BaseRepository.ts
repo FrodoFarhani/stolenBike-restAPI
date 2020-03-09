@@ -1,3 +1,3 @@
 import { Repository } from "typeorm";
 
-export class BaseRepository<T> extends Repository<T> {}
+export default class BaseRepository<T> extends Repository<T> {}

@@ -17,7 +17,7 @@ export const connect = async () => {
 
 export const disconnect = (): Promise<void> => {
 	const conn = getConnection();
-	logger.warn("DB Disconnected!");
+	logger.error("DB Disconnected!");
 	return conn.close();
 };
 
