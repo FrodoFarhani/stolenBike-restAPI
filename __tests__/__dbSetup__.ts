@@ -11,5 +11,5 @@ export default () => {
 
 	afterAll(disconnect);
 	beforeEach(clean);
-	//afterEach(clean);
+	afterEach(clean);
 };

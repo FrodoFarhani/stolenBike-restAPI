@@ -175,8 +175,7 @@ describe("Set stolenCases and officers", () => {
 
 		it("should query stolen cases via different parameters", async () => {
 			repository = getCustomRepository(StolenCaseRepository);
-			const repositoryOfficers = getCustomRepository(OfficersRepository);
-
+			
 			officers1 = await OfficersFactory.create({
 				staffCode: 123
 			});
