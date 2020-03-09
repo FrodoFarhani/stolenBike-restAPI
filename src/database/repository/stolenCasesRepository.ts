@@ -12,27 +12,27 @@ export default class StolenCaseRepository extends BaseRepository<StolenCases> {
 	async createAndSave(stolenCase: StolenCases): Promise<StolenCases> {
 		const officerEntityManager = getCustomRepository(OfficerRepository);
 		const freeOfficer: Officers = await officerEntityManager.findFreeOfficer();
+		const updateObj: Officers = new Officers();
 
 		if (!freeOfficer) {
 			await this.manager.save(stolenCase);
-			return stolenCase;
+		} else {
+			stolenCase.officerId = freeOfficer.id;
+			stolenCase.Status = Status.PROCESSING;
+			updateObj.isAvailable = false;
+
+			await getManager().transaction(
+				"SERIALIZABLE",
+				async transactionalEntityManager => {
+					await transactionalEntityManager.save(stolenCase);
+					await transactionalEntityManager.update(
+						Officers,
+						freeOfficer.id,
+						updateObj
+					);
+				}
+			);
 		}
-
-		stolenCase.officerId = freeOfficer.id;
-		stolenCase.Status = Status.PROCESSING;
-		freeOfficer.isAvailable = false;
-
-		await getManager().transaction(
-			"SERIALIZABLE",
-			async transactionalEntityManager => {
-				await transactionalEntityManager.save(stolenCase);
-				await transactionalEntityManager.update(
-					Officers,
-					freeOfficer.id,
-					freeOfficer
-				);
-			}
-		);
 
 		return stolenCase;
 	}
@@ -72,28 +72,35 @@ export default class StolenCaseRepository extends BaseRepository<StolenCases> {
 	}
 
 	async caseResolved(stolenCase: StolenCases): Promise<StolenCases> {
-		stolenCase.officerId = 0;
-		stolenCase.Status = Status.RESOLVED;
+		const stolenCaseObj = new StolenCases();
+		stolenCaseObj.officerId = 0;
+		stolenCaseObj.Status = Status.RESOLVED;
 
-		const assignedOfficer: Officers = await this.findOfficer(stolenCase.id);
+		const officerEntityManager = getCustomRepository(OfficerRepository);
+		const assignedOfficer: Officers = await officerEntityManager.findOneOfficer(
+			stolenCase.officerId
+		);
 
 		if (!assignedOfficer) {
-			await this.manager.update(StolenCases, stolenCase.id, stolenCase);
+			await this.manager.update(StolenCases, stolenCase.id, stolenCaseObj);
 			return stolenCase;
 		}
-		assignedOfficer.isAvailable = true;
+
+		const officerObj = new Officers();
+		officerObj.isAvailable = true;
+
 		await getManager().transaction(
 			"SERIALIZABLE",
 			async transactionalEntityManager => {
 				await transactionalEntityManager.update(
 					StolenCases,
 					stolenCase.id,
-					stolenCase
+					stolenCaseObj
 				);
 				await transactionalEntityManager.update(
 					Officers,
 					assignedOfficer.id,
-					assignedOfficer
+					officerObj
 				);
 			}
 		);
@@ -102,8 +109,9 @@ export default class StolenCaseRepository extends BaseRepository<StolenCases> {
 	}
 
 	async deleteStolenCase(stolenCase: number | StolenCases) {
-		const assignedOfficer: Officers = await this.findOfficer(
-			typeof stolenCase === "number" ? stolenCase : stolenCase.id
+		const officerEntityManager = getCustomRepository(OfficerRepository);
+		const assignedOfficer: Officers = await officerEntityManager.findOneOfficer(
+			typeof stolenCase === "number" ? stolenCase : stolenCase.officerId
 		);
 
 		if (!assignedOfficer) {
@@ -113,7 +121,10 @@ export default class StolenCaseRepository extends BaseRepository<StolenCases> {
 			);
 			return stolenCase;
 		}
-		assignedOfficer.isAvailable = true;
+
+		const officerObj = new Officers();
+		officerObj.isAvailable = true;
+
 		await getManager().transaction(
 			"SERIALIZABLE",
 			async transactionalEntityManager => {
@@ -124,7 +135,7 @@ export default class StolenCaseRepository extends BaseRepository<StolenCases> {
 				await transactionalEntityManager.update(
 					Officers,
 					assignedOfficer.id,
-					assignedOfficer
+					officerObj
 				);
 			}
 		);
@@ -133,17 +144,9 @@ export default class StolenCaseRepository extends BaseRepository<StolenCases> {
 	}
 
 	async queryCases(stolenCase: StolenCases) {
-		const stolenCaseObj = await getManager().findOne(ViwOfficersVstolenCases, {
-			where: { stolenCase }
+		const stolenCaseObj = await getManager().find(ViwOfficersVstolenCases, {
+			where: stolenCase
 		});
 		return stolenCaseObj;
-	}
-
-	private async findOfficer(id: number) {
-		const officerEntityManager = getCustomRepository(OfficerRepository);
-		const assignedOfficer = await officerEntityManager.findOneOfficer(id);
-		assignedOfficer.isAvailable = true;
-
-		return assignedOfficer;
 	}
 }

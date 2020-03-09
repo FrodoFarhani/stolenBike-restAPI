@@ -16,13 +16,13 @@ export default class StolenCases {
 	@PrimaryGeneratedColumn()
 	public id: number;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ type: "timestamptz", update: false })
 	public createdAt: Date;
 
-	@UpdateDateColumn()
+	@UpdateDateColumn({ type: "timestamptz", update: false })
 	public updatedAt: Date;
 
-	@Column({ type: "timestamp", nullable: false })
+	@Column({ type: "timestamptz", nullable: false })
 	@IsDate()
 	public stolenDate: Date;
 
