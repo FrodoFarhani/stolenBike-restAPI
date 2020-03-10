@@ -3,14 +3,15 @@ import { getCustomRepository } from "typeorm";
 import StolenCases from "../../src/database/entity/stolenCases";
 import Officers from "../../src/database/entity/officers";
 import StolenCaseRepository from "../../src/database/repository/stolenCasesRepository";
+import OfficersRepository from "../../src/database/repository/officersRepository";
 import { StolenCasesFactory } from "../factories/stolenCasesFactory";
 import { OfficersFactory } from "../factories/officersFactory";
 import setup from "../__dbSetup__";
-import OfficersRepository from "../../src/database/repository/officersRepository";
+
 
 setup();
 
-describe("Set stolenCases and officers", () => {
+xdescribe("Set stolenCases and officers", () => {
 	let repository: StolenCaseRepository;
 
 	let stolenCases1: StolenCases;
