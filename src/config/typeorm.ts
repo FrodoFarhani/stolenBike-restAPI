@@ -4,7 +4,6 @@ import logger from "../lib/logger";
 export const connect = async () => {
 	try {
 		const connectionOptions = await getConnectionOptions();
-
 		const connection = await createConnection(connectionOptions);
 		logger.info("Database connection started");
 		return connection;

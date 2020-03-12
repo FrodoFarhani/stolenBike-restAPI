@@ -46,9 +46,11 @@ export default class OfficersRepository extends BaseRepository<Officers> {
 		return officersList;
 	}
 
-	async findOneOfficer(id: number): Promise<any> {
+	async findOneOfficer(id: number | string): Promise<any> {
+		console.log("REPO:", id);
+
 		const officerObj = await this.findOne({
-			where: { id, deletedAt: null }
+			where: { id }
 		});
 		return officerObj;
 	}

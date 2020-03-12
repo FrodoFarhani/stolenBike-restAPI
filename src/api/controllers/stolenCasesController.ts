@@ -20,7 +20,7 @@ export default class StolenCasesController implements Controller {
 	}
 
 	private initializeRoutes(): void {
-		this.router.get(`${this.path}/findCase`, this.findOne);
+		this.router.get(`${this.path}:id`, this.findOne);
 		this.router.get(`${this.path}`, this.findList);
 		this.router.post(
 			this.path,

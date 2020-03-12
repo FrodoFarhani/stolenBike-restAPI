@@ -10,6 +10,7 @@ process.on("unhandledRejection", () => {
 	logger.error("unhandledRejection");
 	process.exit(1);
 });
-
 const app = new App(controllers.map(Controller => new Controller()));
 app.listen();
+
+export default app;

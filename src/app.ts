@@ -25,6 +25,11 @@ class App {
 
 	private initializeMiddlewares() {
 		this.app.use(bodyParser.json());
+		this.app.use(
+			bodyParser.urlencoded({
+				extended: true
+			})
+		);
 	}
 
 	private initializeErrorHandling() {
@@ -33,7 +38,7 @@ class App {
 
 	private initializeControllers(controllers: Controller[]) {
 		controllers.forEach(controller => {
-			this.app.use("/", controller.router);
+			this.app.use("/api", controller.router);
 		});
 	}
 
@@ -43,6 +48,10 @@ class App {
 		} catch (error) {
 			logger.error("Database connection failed !");
 		}
+	}
+
+	public close(PID: number) {
+		process.kill(PID, "SIGTERM");
 	}
 }
 

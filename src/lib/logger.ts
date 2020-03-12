@@ -8,7 +8,7 @@ class Logger {
 	}
 
 	public success(message: string, obj?: IObject) {
-		this.log("\x1b[32m", "INFO", message, obj);
+		this.log("\x1b[32m", "SUCCESS", message, obj);
 	}
 
 	public error(message: string, obj?: IObject) {

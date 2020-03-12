@@ -6,7 +6,7 @@
 	"username": "root",
 	"password": "root",
 	"database": "stolenBike",
-	"synchronize": true,
+	"synchronize": false,
 	"migrationsRun": false,
 	"logging": false,
 	"entities": ["dist/database/entity/**/*.js","dist/database/views/**/*.js"],
