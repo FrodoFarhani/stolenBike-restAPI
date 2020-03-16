@@ -8,9 +8,9 @@ import OfficersRepository from "../../database/repository/officersRepository";
 import NotImplementedException from "../exeptions/NotImplementedException";
 import logger from "../../lib/logger";
 import Officers from "../../database/entity/officers";
-import MissingParametersException from "../exeptions/MissingParametersException";
+// import MissingParametersException from "../exeptions/MissingParametersException";
 import RecordNotFoundException from "../exeptions/RecordNotFoundException";
-// import validationMiddleware from "../middlewares/validationMiddleware";
+import validationMiddleware from "../middlewares/validationMiddleware";
 
 export default class OfficersController implements Controller {
 	public path = "/officers/";
@@ -26,7 +26,7 @@ export default class OfficersController implements Controller {
 		this.router.get(`${this.path}`, this.findList);
 		this.router.post(
 			this.path,
-			// validationMiddleware(Officers, true),
+			validationMiddleware(Officers, true),
 			this.newOfficer
 		);
 		this.router.delete(`${this.path}:id`, this.deleteOfficer);
@@ -52,8 +52,6 @@ export default class OfficersController implements Controller {
 		const newRecord = new Officers();
 		const { staffCode } = request.body;
 		newRecord.staffCode = staffCode;
-		console.log("staffCode:", staffCode);
-
 		try {
 			const entityManager = getCustomRepository(OfficersRepository);
 			const data: any = await entityManager.createAndSave(newRecord);
@@ -72,7 +70,6 @@ export default class OfficersController implements Controller {
 	): Promise<void> => {
 		try {
 			const { id } = request.params;
-			console.log("HERE:", OfficersRepository);
 			const entityManager = getCustomRepository(OfficersRepository);
 			const data: any = await entityManager.findOneOfficer(id);
 			if (data) {
@@ -84,7 +81,6 @@ export default class OfficersController implements Controller {
 				response.status(400).send({ message: error.message });
 			}
 		} catch (error) {
-			console.log("ERROR:", error);
 			logger.error(error);
 			response.status(400).send({
 				message: error.message
@@ -114,23 +110,24 @@ export default class OfficersController implements Controller {
 		request: Request,
 		response: Response
 	): Promise<void> => {
-		const { id } = request.body.id;
-
-		if (!id) {
-			const message = "Required parameters missing";
-			logger.info(message);
-			response.status(404).send(new MissingParametersException(message));
-		}
-
 		try {
+			const { id } = request.params;
 			const entityManager = getCustomRepository(OfficersRepository);
-			const data: any = await entityManager.deleteOfficers(id);
 
-			logger.info("Called URL delete Officer:", { id });
+			const OficerObj: any = await entityManager.findOneOfficer(id);
+
+			if (!OficerObj) {
+				logger.warn(`No Data found for ID:${id}`);
+				const error = new RecordNotFoundException(id);
+				response.status(400).send({ message: error.message });
+			}
+			const data: any = await entityManager.deleteOfficers(OficerObj.id);
+
+			logger.info("Called URL delete staffCode:", { id });
 			response.status(200).send(data);
 		} catch (error) {
 			logger.info(error);
-			response.status(error.status).send({
+			response.status(400).send({
 				message: error.message
 			});
 		}

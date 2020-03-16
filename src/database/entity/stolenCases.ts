@@ -8,7 +8,7 @@ import {
 	Column
 } from "typeorm";
 
-import { IsString, IsDate, IsNumber } from "class-validator";
+import { IsString, IsDateString, IsNumberString } from "class-validator";
 import Status from "../../enums/statusEnum";
 
 @Entity({ name: "stolenCases" })
@@ -23,11 +23,11 @@ export default class StolenCases {
 	public updatedAt: Date;
 
 	@Column({ type: "timestamptz", nullable: false })
-	@IsDate()
+	@IsDateString()
 	public stolenDate: Date;
 
 	@Index()
-	@IsNumber()
+	@IsNumberString()
 	@Column({ type: "int", nullable: false, default: 123 })
 	public licenseNumber: number;
 
@@ -56,6 +56,6 @@ export default class StolenCases {
 	Status: Status;
 
 	@Column({ type: "int", nullable: false, default: 0 })
-	@IsNumber()
+	@IsNumberString()
 	public officerId: number;
 }

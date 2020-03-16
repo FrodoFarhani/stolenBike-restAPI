@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 import { Router, Request, Response, NextFunction } from "express";
 import { getCustomRepository } from "typeorm";
 
@@ -20,8 +22,8 @@ export default class StolenCasesController implements Controller {
 	}
 
 	private initializeRoutes(): void {
-		this.router.get(`${this.path}:id`, this.findOne);
-		this.router.get(`${this.path}`, this.findList);
+		this.router.get(`${this.path}`, this.findOne);
+		this.router.get(`${this.path}/all`, this.findList);
 		this.router.post(
 			this.path,
 			validationMiddleware(StolenCases),
@@ -30,8 +32,10 @@ export default class StolenCasesController implements Controller {
 		this.router.put(`${this.path}/resolved/:id`, this.resolveStolenCase);
 		this.router.put(`${this.path}:id`, this.updateStolenCase);
 		this.router.delete(this.path, this.deleteCase);
+
 		this.router.all(`${this.path}:id/*`, this.error);
 		this.router.all(`${this.path}/resolved/*`, this.error);
+		this.router.all(`${this.path}/all/*`, this.error);
 	}
 
 	private error = async (
@@ -50,9 +54,15 @@ export default class StolenCasesController implements Controller {
 		response: Response,
 		next: NextFunction
 	): Promise<void> => {
-		const newRecord: StolenCases = request.body.stolenCase;
-
 		try {
+			const newRecord: StolenCases = new StolenCases();
+			newRecord.OwnerName = request.body.OwnerName;
+			newRecord.stolenDate = request.body.OwnerName;
+			newRecord.licenseNumber = request.body.OwnerName;
+			newRecord.color = request.body.OwnerName;
+			newRecord.type = request.body.OwnerName;
+			newRecord.description = request.body.description;
+
 			const entityManager = getCustomRepository(StolenCaseRepository);
 			const data: any = await entityManager.createAndSave(newRecord);
 			logger.info("New stolenCase added successfully", newRecord);
@@ -68,11 +78,10 @@ export default class StolenCasesController implements Controller {
 		response: Response,
 		next: NextFunction
 	): Promise<void> => {
-		const newRecord: StolenCases = request.body;
-
 		try {
+			const { id } = request.params;
 			const entityManager = getCustomRepository(StolenCaseRepository);
-			const data = await entityManager.caseResolved(newRecord);
+			const data = await entityManager.caseResolved(id);
 			if (!data) {
 				const message = "Record not found";
 				logger.info(message);
@@ -120,8 +129,7 @@ export default class StolenCasesController implements Controller {
 		response: Response
 	): Promise<void> => {
 		try {
-			const serchObj: StolenCases = request.body;
-
+			const serchObj: string = await this.getRequestKeys(request);
 			if (!serchObj) {
 				const message = "Required parameters missing";
 				logger.info(message);
@@ -164,7 +172,7 @@ export default class StolenCasesController implements Controller {
 		response: Response
 	): Promise<void> => {
 		try {
-			const { id } = request.body;
+			const { id } = request.params;
 
 			if (!id) {
 				const message = "Required parameters missing";
@@ -184,4 +192,12 @@ export default class StolenCasesController implements Controller {
 			});
 		}
 	};
+
+	private async getRequestKeys(request: Request): Promise<string> {
+		let queryString = ``;
+		for (const key in request.query) {
+			queryString += `${key}:${request.query[key]},`;
+		}
+		return queryString.slice(0, -1);
+	}
 }

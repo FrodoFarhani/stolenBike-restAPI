@@ -5,7 +5,7 @@ import {
 	UpdateDateColumn,
 	Column
 } from "typeorm";
-import { IsDate, Min, Max, IsInt, IsNotEmpty } from "class-validator";
+import { IsDate, IsNotEmpty, IsNumberString } from "class-validator";
 
 @Entity({ name: "officers" })
 export default class Officers {
@@ -25,10 +25,8 @@ export default class Officers {
 	@Column({ type: "boolean", nullable: false, default: true })
 	public isAvailable: boolean;
 
-	@IsInt()
+	@IsNumberString()
 	@IsNotEmpty()
-	@Min(1)
-	@Max(1000)
 	@Column({ type: "int", nullable: false })
 	public staffCode: number;
 }

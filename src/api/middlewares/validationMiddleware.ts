@@ -1,26 +1,25 @@
-import { plainToClass } from "class-transformer";
-import { validate, ValidationError } from "class-validator";
-import * as express from "express";
-import HttpException from "../exeptions/HttpException";
+import { RequestHandler } from "express";
+import validateHelper from "../../helpers/validationHelper";
 
-function validationMiddleware(
+/**
+ * Validates data against Dto constraints
+ * @param type
+ * @param skipMissingProperties
+ */
+const validationMiddleware = (
 	type: any,
 	skipMissingProperties = false
-): express.RequestHandler {
-	return (req, _res, next) => {
-		validate(plainToClass(type, req.body), { skipMissingProperties }).then(
-			(errors: ValidationError[]) => {
-				if (errors.length > 0) {
-					const message = errors
-						.map((error: ValidationError) => Object.values(error.constraints))
-						.join(", ");
-					next(new HttpException(400, message));
-				} else {
-					next();
-				}
-			}
-		);
+): RequestHandler => {
+	return async (req, res, next) => {
+		try {
+			await validateHelper(type, req.body, skipMissingProperties);
+			next();
+		} catch (error) {
+			res.status(400).send({
+				message: error.message
+			});
+		}
 	};
-}
+};
 
 export default validationMiddleware;

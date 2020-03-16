@@ -13,4 +13,4 @@ process.on("unhandledRejection", () => {
 const app = new App(controllers.map(Controller => new Controller()));
 app.listen();
 
-export default app;
+// export default app;

@@ -46,11 +46,9 @@ export default class OfficersRepository extends BaseRepository<Officers> {
 		return officersList;
 	}
 
-	async findOneOfficer(id: number | string): Promise<any> {
-		console.log("REPO:", id);
-
+	async findOneOfficer(staffCode: number | string): Promise<any> {
 		const officerObj = await this.findOne({
-			where: { id }
+			where: { staffCode, deletedAt: null }
 		});
 		return officerObj;
 	}
@@ -62,7 +60,7 @@ export default class OfficersRepository extends BaseRepository<Officers> {
 		return officerObj;
 	}
 
-	async deleteOfficers(officer: number | Officers) {
+	async deleteOfficers(officer: number | string) {
 		const officerObj = new Officers();
 		officerObj.deletedAt = new Date();
 
@@ -71,27 +69,20 @@ export default class OfficersRepository extends BaseRepository<Officers> {
 		stolenCasesObj.Status = Status.ASSESMENT;
 
 		const stolenCaseEntityManager = getCustomRepository(StolenCaseRepository);
+
 		const stolenCaseThisOfficer: StolenCases = await stolenCaseEntityManager.findByOfficerId(
-			typeof officer === "number" ? officer : officer.id
+			officer
 		);
 
 		if (!stolenCaseThisOfficer) {
-			await this.manager.update(
-				Officers,
-				typeof officer === "number" ? officer : officer.id,
-				officerObj
-			);
+			await this.manager.update(Officers, officer, officerObj);
 			return officer;
 		}
 
 		await getManager().transaction(
 			"SERIALIZABLE",
 			async transactionalEntityManager => {
-				await this.manager.update(
-					Officers,
-					typeof officer === "number" ? officer : officer.id,
-					officerObj
-				);
+				await this.manager.update(Officers, officer, officerObj);
 				await transactionalEntityManager.update(
 					StolenCases,
 					stolenCaseThisOfficer.id,
