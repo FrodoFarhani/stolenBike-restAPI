@@ -1,0 +1,414 @@
+{
+
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Stolen Bike API",
+        "description": "The Police want to be more efficient in resolving stolen bike cases. They decided to build a software that can automate their processes — the software that you're going to develop.",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "/api/",
+            "description": "Local Dev, or from Heroku"
+        },
+        {
+            "url": "/api/",
+            "description": "With docker-compose"
+        }
+    ],
+    "tags": [
+        {
+            "name": "StolenCases",
+            "description": "API for Stolen Cases in the system"
+		},
+		{
+			"name": "Officers",
+			"description": "API for Officers in the system"
+		}
+    ],
+    "consumes": [
+        "application/x-www-form-urlencoded"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/cases": {
+            "get": {
+                "tags": [
+                    "StolenCases"
+                ],
+                "summary": "Get all StolenCases in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/StolenCases"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "StolenCases"
+                ],
+                "summary": "Create a new StolenCase in system",
+                "requestBody": {
+                    "description": "StolenCase Object",
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/definitions/StolenCase"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/StolenCase"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/cases/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the StolenCase that we want to match",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "StolenCase"
+                ],
+                "summary": "Get StolenCase with given ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "StolenCase with id",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/StolenCase"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. StolenCase not found."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update StolenCase with given ID",
+                "tags": [
+                    "StolenCases"
+                ],
+                "requestBody": {
+                    "description": "StolenCase Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/StolenCase"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "StolenCase with new values of properties",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/StolenCase"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    },
+                    "404": {
+                        "description": "Failed. StolenCase not found."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete StolenCase with given ID",
+                "tags": [
+                    "StolenCases"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Delete StolenCase with id",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. StolenCase not found."
+                    }
+                }
+            }
+		},
+		"/officers": {
+            "get": {
+                "tags": [
+                    "officers"
+                ],
+                "summary": "Get all officers in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Officers"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Officers"
+                ],
+                "summary": "Create a new Officers in system",
+                "requestBody": {
+                    "description": "Officers Object",
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/definitions/Officer"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Officer"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/Officers/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the Officer that we want to match",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Officers"
+                ],
+                "summary": "Get Officers with given ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "StolenCase with id",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Officer"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Officers not found."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update Officer with given ID",
+                "tags": [
+                    "Officers"
+                ],
+                "requestBody": {
+                    "description": "Officer Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Officer"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Officer with new values of properties",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Officer"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    },
+                    "404": {
+                        "description": "Failed. Officer not found."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Officer with given ID",
+                "tags": [
+                    "Officers"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Delete StolenCase with id",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Officers not found."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "id": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                }
+            }
+        },
+        "StolenCase": {
+            "type": "object",
+            "properties": {
+                "licenseNumber": {
+                    "type": "number"
+				},
+				"color": {
+                    "type": "string"
+				},
+				"type": {
+                    "type": "string"
+				},
+				"OwnerName": {
+                    "type": "string"
+				},
+				"description": {
+                    "type": "text"
+				}
+            }
+        },
+        "StolenCases": {
+            "type": "object",
+            "properties": {
+                "stolenCases": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/StolenCase"
+                    }
+                }
+            }
+		},
+		"Officer": {
+            "type": "object",
+            "properties": {
+                "staffCode": {
+                    "type": "number"
+				}
+            }
+        },
+        "Officers": {
+            "type": "object",
+            "properties": {
+                "stolenCases": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/Officer"
+                    }
+                }
+            }
+        }
+    }
+
+}
+

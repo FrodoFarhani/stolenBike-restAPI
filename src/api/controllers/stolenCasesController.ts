@@ -22,8 +22,8 @@ export default class StolenCasesController implements Controller {
 	}
 
 	private initializeRoutes(): void {
-		this.router.get(`${this.path}`, this.findOne);
-		this.router.get(`${this.path}/all`, this.findList);
+		this.router.get(`${this.path}`, this.findList);
+		this.router.get(`${this.path}/:query`, this.findOne);
 		this.router.post(
 			this.path,
 			validationMiddleware(StolenCases),
