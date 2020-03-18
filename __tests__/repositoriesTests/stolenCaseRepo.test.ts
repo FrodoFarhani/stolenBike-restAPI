@@ -198,23 +198,17 @@ xdescribe("Set stolenCases and officers", () => {
 				color:"red"
 			});
 
-			let searchObj1 = new StolenCases();
-			let searchObj2 = new StolenCases();
-			let searchObj3 = new StolenCases();
-			let searchObj4 = new StolenCases();
-
-			searchObj1.OwnerName = "TEST";
+			let searchObj1 = "OwnerName=TEST";
 			const expectedObject1 = await repository.queryCases(searchObj1);
 
-			searchObj2.type = "R";
-			searchObj2.color = "red";
+			let searchObj2 = "type=R&color=red";
 			const expectedObject2 = await repository.queryCases(searchObj2);
 
-			searchObj3.color = "red";
+			let searchObj3 = "color=red";
 			const expectedObject3 = await repository.queryCases(searchObj3);
 
-			searchObj4.licenseNumber = 222;
-			searchObj4.type = "R";
+			
+			let searchObj4 = "type=R&licenseNumber=222";
 			const expectedObject4 = await repository.queryCases(searchObj4);
 			
 			expect(expectedObject1[0].OwnerName).toBe("TEST");

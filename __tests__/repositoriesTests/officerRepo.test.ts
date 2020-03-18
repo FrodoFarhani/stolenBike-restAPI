@@ -117,7 +117,7 @@ xdescribe("Set stolenCases and officers", () => {
 			stolenCasesObj.stolenDate = new Date();
 			await stolenCasesRepo.createAndSave(stolenCasesObj);
 
-			await officersReo.deleteOfficers(officers1);
+			await officersReo.deleteOfficers(officers1.id);
 			const expectedOfficer1 = await officersReo.findOneOfficer(officers1.id);
 			const expectedStolenCase = await stolenCasesRepo.findOneStolenCase(stolenCasesObj.id);
 
