@@ -1,8 +1,6 @@
 /* tslint:disable */
-import {
-  Officer,
-} from '.';
+import { Officer } from ".";
 
 export interface Officers {
-  stolenCases?: { [key: string]: Officer };
+	stolenCases?: { [key: string]: Officer };
 }

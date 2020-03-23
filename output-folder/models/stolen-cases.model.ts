@@ -1,8 +1,6 @@
 /* tslint:disable */
-import {
-  StolenCase,
-} from '.';
+import { StolenCase } from ".";
 
 export interface StolenCases {
-  stolenCases?: { [key: string]: StolenCase };
+	stolenCases?: { [key: string]: StolenCase };
 }
