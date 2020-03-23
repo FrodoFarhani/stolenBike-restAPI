@@ -1,9 +1,9 @@
 import { createConnection, getConnection, getConnectionOptions } from "typeorm";
 import logger from "../lib/logger";
 
-export const connect = async () => {
+export const connect = async (connectionName = "default") => {
 	try {
-		const connectionOptions = await getConnectionOptions();
+		const connectionOptions = await getConnectionOptions(connectionName);
 		const connection = await createConnection(connectionOptions);
 		logger.info("Database connection started");
 		return connection;

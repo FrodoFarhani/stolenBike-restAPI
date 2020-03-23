@@ -20,4 +20,7 @@ module.exports = {
 			diagnostics: false
 		}
 	}
+	//setupTestFrameworkScriptFile: "./__tests__/setup/setup.ts"
+	//verbose: true
+	//testURL: "http://localhost:3000/"
 };

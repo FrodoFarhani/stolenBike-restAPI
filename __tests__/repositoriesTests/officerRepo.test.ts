@@ -8,11 +8,8 @@ import StolenCaseRepository from "../../src/database/repository/stolenCasesRepos
 import OfficersRepository from "../../src/database/repository/officersRepository";
 import setup from "../__dbSetup__";
 
-
-setup();
-
 xdescribe("Set stolenCases and officers", () => {
-
+	setup();
 	let stolenCases1: StolenCases;
 	let stolenCases2: StolenCases;
 	let stolenCases3: StolenCases;
@@ -21,19 +18,19 @@ xdescribe("Set stolenCases and officers", () => {
 	let officers3: Officers;
 
 	describe("Check repository methods", () => {
-
 		it("should return one case or undefined", async () => {
-			
-			const officersReo: OfficersRepository = getCustomRepository(OfficersRepository);
+			const officersReo: OfficersRepository = getCustomRepository(
+				OfficersRepository
+			);
 
 			officers1 = await OfficersFactory.create({
 				staffCode: 123
 			});
 			officers2 = await OfficersFactory.create({
 				staffCode: 456,
-				isAvailable:false
+				isAvailable: false
 			});
-			
+
 			const expectedStolenCase1 = await officersReo.findOneOfficer(
 				officers1.id
 			);
@@ -44,9 +41,12 @@ xdescribe("Set stolenCases and officers", () => {
 		});
 
 		it("should create one officer and  assign to stolenCase automatically", async () => {
-			
-			const stolenCasesRepo: StolenCaseRepository = getCustomRepository(StolenCaseRepository);
-			const officersReo: OfficersRepository = getCustomRepository(OfficersRepository);
+			const stolenCasesRepo: StolenCaseRepository = getCustomRepository(
+				StolenCaseRepository
+			);
+			const officersReo: OfficersRepository = getCustomRepository(
+				OfficersRepository
+			);
 
 			stolenCases1 = await StolenCasesFactory.create({
 				stolenDate: new Date()
@@ -54,21 +54,23 @@ xdescribe("Set stolenCases and officers", () => {
 
 			officers1.staffCode = 123;
 			const officerObject = await officersReo.createAndSave(officers1);
-			
+
 			const expectedStolenCase1 = await stolenCasesRepo.findOneStolenCase(
 				stolenCases1.id
 			);
 			const expectedOfficer1 = await officersReo.findOneOfficer(
 				officerObject.id
 			);
-			
+
 			expect(expectedOfficer1.id).toEqual(officerObject.id);
 			expect(expectedStolenCase1.officerId).toEqual(officers1.id);
 			expect(expectedOfficer1.isAvailable).toEqual(false);
 		});
 
 		it("shold return all officers", async () => {
-			const officersReo: OfficersRepository = getCustomRepository(OfficersRepository);
+			const officersReo: OfficersRepository = getCustomRepository(
+				OfficersRepository
+			);
 
 			officers1 = await OfficersFactory.create({
 				staffCode: 123
@@ -86,8 +88,12 @@ xdescribe("Set stolenCases and officers", () => {
 		});
 
 		it("should find one free officer", async () => {
-			const officersReo: OfficersRepository = getCustomRepository(OfficersRepository);
-			const stolenCasesRepo: StolenCaseRepository = getCustomRepository(StolenCaseRepository);
+			const officersReo: OfficersRepository = getCustomRepository(
+				OfficersRepository
+			);
+			const stolenCasesRepo: StolenCaseRepository = getCustomRepository(
+				StolenCaseRepository
+			);
 
 			officers1 = await OfficersFactory.create({
 				staffCode: 123
@@ -105,8 +111,12 @@ xdescribe("Set stolenCases and officers", () => {
 		});
 
 		it("should delete officer and change stolenCase status  automatically", async () => {
-			const officersReo: OfficersRepository = getCustomRepository(OfficersRepository);
-			const stolenCasesRepo: StolenCaseRepository = getCustomRepository(StolenCaseRepository);
+			const officersReo: OfficersRepository = getCustomRepository(
+				OfficersRepository
+			);
+			const stolenCasesRepo: StolenCaseRepository = getCustomRepository(
+				StolenCaseRepository
+			);
 
 			officers1 = await OfficersFactory.create({
 				staffCode: 123
@@ -119,7 +129,9 @@ xdescribe("Set stolenCases and officers", () => {
 
 			await officersReo.deleteOfficers(officers1.id);
 			const expectedOfficer1 = await officersReo.findOneOfficer(officers1.id);
-			const expectedStolenCase = await stolenCasesRepo.findOneStolenCase(stolenCasesObj.id);
+			const expectedStolenCase = await stolenCasesRepo.findOneStolenCase(
+				stolenCasesObj.id
+			);
 
 			expect(expectedStolenCase.officerId).toBe(0);
 			expect(expectedOfficer1.deletedAt).toBeDate();

@@ -8,10 +8,9 @@ import { StolenCasesFactory } from "../factories/stolenCasesFactory";
 import { OfficersFactory } from "../factories/officersFactory";
 import setup from "../__dbSetup__";
 
-
-setup();
-
 xdescribe("Set stolenCases and officers", () => {
+	setup();
+
 	let repository: StolenCaseRepository;
 
 	let stolenCases1: StolenCases;
@@ -20,7 +19,6 @@ xdescribe("Set stolenCases and officers", () => {
 	let officers1: Officers;
 
 	describe("to check repository methods", () => {
-		
 		it("should return one case or undefined", async () => {
 			repository = getCustomRepository(StolenCaseRepository);
 
@@ -37,31 +35,28 @@ xdescribe("Set stolenCases and officers", () => {
 			);
 			const expectedStolenCase2 = await repository.findOneStolenCase(1000);
 
-		
-			 expect(expectedStolenCase1.id).toEqual(stolenCases1.id);
-			 expect(expectedStolenCase2).toEqual(undefined);
+			expect(expectedStolenCase1.id).toEqual(stolenCases1.id);
+			expect(expectedStolenCase2).toEqual(undefined);
 		});
 
 		it("should create one case and  assign officer automatically", async () => {
 			repository = getCustomRepository(StolenCaseRepository);
 			const repositoryOfficers = getCustomRepository(OfficersRepository);
-			
+
 			officers1 = await OfficersFactory.create({
 				staffCode: 123
 			});
 
-			
 			stolenCases1.OwnerName = "TEST";
 			const stolenCaseObject = await repository.createAndSave(stolenCases1);
 
-			
 			const expectedStolenCase1 = await repository.findOneStolenCase(
 				stolenCases1.id
 			);
 			const expectedOfficer1 = await repositoryOfficers.findOneOfficer(
 				officers1.id
 			);
-			
+
 			expect(expectedStolenCase1.id).toEqual(stolenCaseObject.id);
 			expect(expectedStolenCase1.officerId).toEqual(officers1.id);
 			expect(expectedOfficer1.isAvailable).toEqual(false);
@@ -86,7 +81,7 @@ xdescribe("Set stolenCases and officers", () => {
 
 		it("shold finde stolenCase by officerId", async () => {
 			repository = getCustomRepository(StolenCaseRepository);
-			
+
 			officers1 = await OfficersFactory.create({
 				staffCode: 123
 			});
@@ -103,7 +98,7 @@ xdescribe("Set stolenCases and officers", () => {
 
 		it("should find one stolen case without officerId", async () => {
 			repository = getCustomRepository(StolenCaseRepository);
-			
+
 			officers1 = await OfficersFactory.create({
 				staffCode: 123
 			});
@@ -115,19 +110,22 @@ xdescribe("Set stolenCases and officers", () => {
 			});
 
 			const expectedStolenCase1 = await repository.findStolenCaseWithoutOfficer();
-		
+
 			expect(expectedStolenCase1.id).toEqual(stolenCases1.id);
 		});
 
-		it("should update stolencase information", async ()=>{
+		it("should update stolencase information", async () => {
 			repository = getCustomRepository(StolenCaseRepository);
 			stolenCases1 = await StolenCasesFactory.create({
 				stolenDate: new Date()
 			});
 
-			let stolenCasesObj: StolenCases=new StolenCases();
+			let stolenCasesObj: StolenCases = new StolenCases();
 			stolenCasesObj.OwnerName = "MOF";
-			const expectedStolenCase1 = await repository.updateStolenCase(stolenCases1.id, stolenCasesObj);
+			const expectedStolenCase1 = await repository.updateStolenCase(
+				stolenCases1.id,
+				stolenCasesObj
+			);
 
 			expect(expectedStolenCase1.OwnerName).toEqual("MOF");
 		});
@@ -146,8 +144,12 @@ xdescribe("Set stolenCases and officers", () => {
 			await repository.createAndSave(stolenCasesObj);
 
 			await repository.caseResolved(stolenCasesObj);
-			const expectedOfficer1 = await repositoryOfficers.findOneOfficer(officers1.id);
-			const expectedStolenCase = await repository.findOneStolenCase(stolenCasesObj.id);
+			const expectedOfficer1 = await repositoryOfficers.findOneOfficer(
+				officers1.id
+			);
+			const expectedStolenCase = await repository.findOneStolenCase(
+				stolenCasesObj.id
+			);
 
 			expect(expectedStolenCase.officerId).toEqual(0);
 			expect(expectedOfficer1.isAvailable).toEqual(true);
@@ -167,8 +169,12 @@ xdescribe("Set stolenCases and officers", () => {
 			await repository.createAndSave(stolenCasesObj);
 
 			await repository.deleteStolenCase(stolenCasesObj);
-			const expectedOfficer1 = await repositoryOfficers.findOneOfficer(officers1.id);
-			const expectedStolenCase = await repository.findOneStolenCase(stolenCasesObj.id);
+			const expectedOfficer1 = await repositoryOfficers.findOneOfficer(
+				officers1.id
+			);
+			const expectedStolenCase = await repository.findOneStolenCase(
+				stolenCasesObj.id
+			);
 
 			expect(expectedStolenCase).toBe(undefined);
 			expect(expectedOfficer1.isAvailable).toEqual(true);
@@ -176,7 +182,7 @@ xdescribe("Set stolenCases and officers", () => {
 
 		it("should query stolen cases via different parameters", async () => {
 			repository = getCustomRepository(StolenCaseRepository);
-			
+
 			officers1 = await OfficersFactory.create({
 				staffCode: 123
 			});
@@ -195,7 +201,7 @@ xdescribe("Set stolenCases and officers", () => {
 			await StolenCasesFactory.create({
 				stolenDate: new Date(),
 				OwnerName: "MOF",
-				color:"red"
+				color: "red"
 			});
 
 			let searchObj1 = "OwnerName=TEST";
@@ -207,10 +213,9 @@ xdescribe("Set stolenCases and officers", () => {
 			let searchObj3 = "color=red";
 			const expectedObject3 = await repository.queryCases(searchObj3);
 
-			
 			let searchObj4 = "type=R&licenseNumber=222";
 			const expectedObject4 = await repository.queryCases(searchObj4);
-			
+
 			expect(expectedObject1[0].OwnerName).toBe("TEST");
 			expect(expectedObject2[0].color).toBe("red");
 			expect(expectedObject3.length).toBe(2);

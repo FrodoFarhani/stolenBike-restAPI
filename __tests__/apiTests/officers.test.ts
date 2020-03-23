@@ -1,37 +1,27 @@
 import request from "supertest";
-import App from "../../src/app";
-import controllers from "../../src/api/controllers";
-import express from "express"
-import bodyParser from "body-parser";
+
 import setup from "../__dbSetup__";
-import { getConnectionOptions, createConnection } from "typeorm";
-import { connect, disconnect } from "../../src/config/typeorm";
+import { server } from "../setup/server";
+import Officers from "../../src/database/entity/officers";
+import { OfficersFactory } from "../factories/officersFactory";
 
-setup();
-const app = express();
-app.use(bodyParser.json());
-app.use(
-    bodyParser.urlencoded({
-        extended: true
-    })
-);
+describe("Officers api tests", () => {
+	setup();
+	const app = server();
 
-controllers.forEach(controller => {
-    app.use("/api",new controller().router);
-});
+	let officers1: Officers;
+	let officers2: Officers;
 
-app.get("/", (req, res) => {
-    res.status(200).send("Hello World!");
-});
+	describe("Test the root path", () => {
+		it("should response the GET method", async () => {
+			officers1 = await OfficersFactory.create({
+				staffCode: 622
+			});
 
-describe("Test the root path",  () => {
-    test("It should response the GET method", async () => {
-        await connect();
-        const response = await request(app)
-            .get("/api/officer/669");
-            console.log("response:",response);
-        
-        expect(response.status).toBe(200);
-        
-    });
+			const response = await request(app).get("/officers/622");
+
+			expect(response.status).toBe(200);
+			expect(response.body.staffCode).toBe(622);
+		});
+	});
 });

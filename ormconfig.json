@@ -1,4 +1,5 @@
-{
+
+	{
 	"name": "default",
 	"type": "postgres",
 	"host": "localhost",
@@ -9,9 +10,9 @@
 	"synchronize": true,
 	"migrationsRun": false,
 	"logging": false,
-	"entities": ["dist/database/entity/**/*.js","dist/database/views/**/*.js"],
-	"migrations": ["dist/database/migration/*.js"],
-	"subscribers": ["dist/database/subscriber/*.js"],
+	"entities": ["src/database/entity/**/*{.ts,.js}","src/database/views/**/*{.ts,.js}"],
+	"migrations": ["dist/database/migration/*{.ts,.js}"],
+	"subscribers": ["dist/database/subscriber/*{.ts,.js}"],
 	"cli": {
 		"entitiesDir": ["src/database/entity","src/database/views"],
 		"migrationsDir": "src/database/migration",

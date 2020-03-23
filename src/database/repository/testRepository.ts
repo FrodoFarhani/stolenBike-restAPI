@@ -13,7 +13,6 @@ export default class TestRepository {
 
 			return officerObj;
 		} catch (error) {
-			console.log("ERROR:", error);
 			return undefined;
 		}
 	}
