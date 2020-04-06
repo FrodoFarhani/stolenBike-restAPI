@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    working_dir: /app
+    working_dir: /usr/src/app
     env_file:
       - .env
     ports:
@@ -24,8 +24,8 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/app
-    command: yarn start
+      - .:/usr/src/app
+    command: yarn test
   
   # DB
   db:

@@ -8,7 +8,7 @@ import StolenCaseRepository from "../../src/database/repository/stolenCasesRepos
 import OfficersRepository from "../../src/database/repository/officersRepository";
 import setup from "../__dbSetup__";
 
-xdescribe("Set stolenCases and officers", () => {
+describe("Set stolenCases and officers", () => {
 	setup();
 	let stolenCases1: StolenCases;
 	let stolenCases2: StolenCases;

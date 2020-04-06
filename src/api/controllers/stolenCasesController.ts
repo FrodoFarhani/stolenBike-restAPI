@@ -8,7 +8,7 @@ import NotImplementedException from "../exeptions/NotImplementedException";
 import validationMiddleware from "../middlewares/validationMiddleware";
 import StolenCases from "../../database/entity/stolenCases";
 import logger from "../../lib/logger";
-import StolenCaseRepository from "../../database/repository/StolenCasesRepository";
+import StolenCaseRepository from "../../database/repository/stolenCasesRepository";
 import MissingParametersException from "../exeptions/MissingParametersException";
 import RecordNotFoundException from "../exeptions/RecordNotFoundException";
 

@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "preinstall": "npm i nodemon -g",
-    "build": "lint tsc copy-assets",
+    "build": "tsc",
     "start": "ts-node ./src/index.ts",
     "lint": "eslint . --cache --fix --ext .ts,.tsx",
     "pretest": "npm run lint && tsc --noEmit",
